@@ -1,0 +1,22 @@
+{
+  "name": "docmon",
+  "version": "1.0.0",
+  "description": "Document monitoring tool",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osipovrb/docmon.git"
+  },
+  "author": "Osipov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/osipovrb/docmon/issues"
+  },
+  "homepage": "https://github.com/osipovrb/docmon#readme",
+  "devDependencies": {
+    "electron": "^13.0.1"
+  }
+}
