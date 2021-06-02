@@ -2,9 +2,10 @@
   "name": "docmon",
   "version": "1.0.0",
   "description": "Document monitoring tool",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "compile": "electron-packager ./ --overwrite --ignore=\\.gitignore"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/osipovrb/docmon#readme",
   "devDependencies": {
-    "electron": "^13.0.1"
+    "electron": "^13.0.1",
+    "electron-packager": "^15.2.0"
   }
 }
