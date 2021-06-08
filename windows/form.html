@@ -2,8 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8">
-
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <script src="../node_modules/xel/xel.js" type="module"></script>
+    <script src="js/form.js" type="module"></script>
     <meta name="xel-theme" content="../node_modules/xel/themes/fluent.css">
     <meta name="xel-accent-color" content="blue">
     <meta name="xel-size" content="large">
