@@ -21,6 +21,19 @@ class Document {
     execute_label = '' // Отметка об исполнении, String
     stored_in = '' // Место хранения документа, String
 
+    constructor() {
+        let sql_attrs = []
+        this.attrs.forEach((attr) => {
+            sql_attrs.push(attr + ' TEXT')
+        })
+        
+        const sqlite3 = require('sqlite3').verbose()
+        this.db = new sqlite3.Database('./documents.sqlite3');
+        this.db.run(`CREATE TABLE IF NOT EXISTS documents(\
+                    id INTEGER PRIMARY KEY,\
+                    ${sql_attrs.join(', ')})`);
+    }
+
     fill(data) {
         let sql_attrs = []
         this.attrs.forEach((attr) => {
@@ -28,15 +41,11 @@ class Document {
             sql_attrs.push(attr + ' TEXT')
         })
                 
-        const sqlite3 = require('sqlite3').verbose()
-        this.db = new sqlite3.Database('./documents.sqlite3');
-        this.db.run(`CREATE TABLE IF NOT EXISTS documents(\
-                    id INTEGER PRIMARY KEY,\
-                    ${sql_attrs.join(', ')})`);
+
         return this
     }
 
-    create() {
+    insert() {
         let attr_values = []
         let attr_placeholders = []
         this.attrs.forEach((attr) => {
