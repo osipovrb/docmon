@@ -19,6 +19,11 @@
   "homepage": "https://github.com/osipovrb/docmon#readme",
   "devDependencies": {
     "electron": "^13.0.1",
-    "electron-packager": "^15.2.0"
+    "electron-packager": "^15.2.0",
+    "sqlite3": "^5.0.2"
+  },
+  "dependencies": {
+    "xel": "^0.9.7",
+    "xel-fonts": "^0.9.1"
   }
 }

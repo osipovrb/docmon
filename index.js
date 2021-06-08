@@ -1,23 +1,34 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
-function createWindow () {
-    const win = new BrowserWindow({
-      width: 800,
-      height: 600,
+function createWindow (file, width, height) {
+    const window = new BrowserWindow({
+        width: width,
+        height: height,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            defaultEncoding: 'UTF-8',
+        },
     })
-  
-    win.loadFile('index.html')
-  }
+    window.loadFile(file)
+    //win.removeMenu()
+    return window
+}
 
-  app.whenReady().then(() => {
-    createWindow()
-
-    app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+app.whenReady().then(() => {
+    const mainWindow = createWindow('windows/main.html', 800, 600)
+    ipcMain.on('open-form', (_event, _args) => {
+        const formWindow = createWindow('windows/form.html', 900, 850)
+        formWindow.on('close', (_event) => {
+            mainWindow.webContents.send('main', 'form-closed')
+        })
+        mainWindow.on('close', (_event) => {
+            formWindow.close()
+        })
     })
-  })
+})
 
-  app.on('window-all-closed', function () {
+app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit()
-  })
+})

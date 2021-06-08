@@ -1,0 +1,15 @@
+x-input, x-select {
+    max-width: 9000px;
+}
+
+td {
+    border: none !important;
+}
+
+.width-100 {
+    width: 100%
+}
+
+.pull-top {
+    vertical-align: top;
+}

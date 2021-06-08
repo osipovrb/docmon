@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <script src="../node_modules/xel/xel.js" type="module"></script>
+    <meta name="xel-theme" content="../node_modules/xel/themes/fluent.css">
+    <meta name="xel-accent-color" content="blue">
+    <meta name="xel-size" content="large">
+    <meta name="xel-iconset" content="../node_modules/xel/iconsets/material-outlined.svg">
+    <link href="../node_modules/xel-fonts/fonts.css" rel="stylesheet"></link>
+    <link href="css/style.css" rel="stylesheet"></link>
+    <title>Новый документ - Документы ОСД</title>
+  </head>
+  <body>
+      <x-box>
+        <table class="width-100" cellspacing="0" cellpadding="0">
+          <tr>
+            <td colspan="3"><strong>Сведения о документе</strong></td>
+          </tr>
+          <tr>
+            <td class="no-border">
+              <x-input id="delivered_at">
+                <x-label>Дата входящего</x-label>
+              </x-input>
+            </td>
+            <td>
+              <x-input id="delivered_number">
+                <x-label>Номер входящий</x-label>
+              </x-input>
+            </td>
+            <td>
+              <x-select id="secret_label">
+                <x-menu>
+                  <x-menuitem value="dsp">
+                    <x-label>ДСП</x-label>
+                  </x-menuitem>
+              
+                  <x-menuitem value="s" toggled>
+                    <x-label>Секретно</x-label>
+                  </x-menuitem>
+              
+                  <x-menuitem value="ss">
+                    <x-label>Совершенно секретно</x-label>
+                  </x-menuitem>
+              
+                  <x-menuitem value="ov">
+                    <x-label>Особой важности</x-label>
+                  </x-menuitem>
+                </x-menu>
+              </x-select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <x-input id="reg_date">
+                <x-label>Дата исходящего</x-label>
+              </x-input>
+            </td>
+            <td>
+              <x-input id="reg_number">
+                <x-label>Номер исходящий</x-label>
+              </x-input>
+            </td>
+            <td>
+              <x-input id="doc_type">
+                <x-label>Вид документа</x-label>
+              </x-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <x-input id="origin">
+                <x-label>Откуда поступил</x-label>
+              </x-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <x-texteditor id="doc_content">
+                <x-label>Краткое содержание</x-label>
+              </x-texteditor>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <x-input id="sheets_count">
+                <x-label>Количество листов</x-label>
+              </x-input>
+            </td>
+            <td>
+              <x-input id="instance_number">
+                <x-label>Номера экземпляров</x-label>
+              </x-input>
+            </td>
+            <td>
+
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"><strong>Исполнение</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <x-texteditor id="executant">
+                <x-label>Исполнители</x-label>
+              </x-input>
+            </td>
+            <td colspan="2" class="pull-top">
+              <x-input id="execute_till">
+                <x-label>Исполнить до (дата)</x-label>
+              </x-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <x-texteditor id="execute_label">
+                <x-label>Отметка об исполнении</x-label>
+              </x-input>
+            </td>
+            <td colspan="2" class="pull-top">
+              <x-input id="executed_at">
+                <x-label>Исполнено (дата)</x-label>
+              </x-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <x-input id="stored_in">
+                <x-label>Место хранения</x-label>
+              </x-input>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3"><hr></td>
+          </tr>
+          <tr>
+            <td>
+              <x-button id="create-button" class="save">
+                <x-label>Сохранить</x-label>
+              </x-button>
+            </td>
+            <td>
+
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+        </table>
+      </x-box>
+  </body>
+</html>
