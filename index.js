@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
+const { Document } = require('./document')
 
 const path = require('path')
 
@@ -21,8 +22,10 @@ function createWindow (file, width, height) {
 app.whenReady().then(() => {
     let mainWindow = createWindow('windows/main.html', 800, 600)
     mainWindow.once('ready-to-show', () => { mainWindow.show() })
+
+    // --- open form ---
     ipcMain.on('open-form', (_event, _args) => {
-        let formWindow = createWindow('windows/form.html', 900, 850)
+        let formWindow = createWindow('windows/form.html', 900, 900)
         formWindow.once('ready-to-show', () => { formWindow.show() })
         formWindow.on('close', (_event) => { 
             mainWindow.webContents.send('main', 'form-closed')
@@ -31,6 +34,20 @@ app.whenReady().then(() => {
         mainWindow.on('close', (_event) => { 
             if (formWindow) formWindow.close() 
         })
+    })
+
+    // --- create document
+    ipcMain.on('create-document', (_event, docData) => {
+        (async () => {
+            try {
+                const doc = new Document().fill(docData)
+                await doc.insert()
+                mainWindow.webContents.send('notification', 'Документ успешно добавлен в базу данных')
+            } catch(err) {
+                mainWindow.webContents.send('alert', err)
+            }
+
+        })()
     })
 })
 

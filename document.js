@@ -1,5 +1,8 @@
+const sqlite3 = require('sqlite3')
+const { open } = require('sqlite')
+
 class Document {
-    attrs = ['delivered_at', 'delivered_number', 'secret_label',
+    static attrs = ['delivered_at', 'delivered_number', 'secret_label',
     'reg_number', 'reg_date', 'origin', 'doc_type', 'doc_content',
     'sheets_count', 'instance_number', 'executant', 'execute_till',
     'executed_at', 'execute_label', 'stored_in']
@@ -21,46 +24,45 @@ class Document {
     execute_label = '' // Отметка об исполнении, String
     stored_in = '' // Место хранения документа, String
 
-    constructor() {
-        let sql_attrs = []
-        this.attrs.forEach((attr) => {
-            sql_attrs.push(attr + ' TEXT')
-        })
-        
-        const sqlite3 = require('sqlite3').verbose()
-        this.db = new sqlite3.Database('./documents.sqlite3');
-        this.db.run(`CREATE TABLE IF NOT EXISTS documents(\
-                    id INTEGER PRIMARY KEY,\
-                    ${sql_attrs.join(', ')})`);
-    }
-
     fill(data) {
-        let sql_attrs = []
-        this.attrs.forEach((attr) => {
-            this[attr] = data[attr]
-            sql_attrs.push(attr + ' TEXT')
+        data.forEach((attr) => {
+            this[attr[0]] = attr[1]
         })
-                
-
         return this
     }
 
-    insert() {
-        let attr_values = []
-        let attr_placeholders = []
-        this.attrs.forEach((attr) => {
-            attr_values.push(this[attr])
-            attr_placeholders.push('?')
-        })
-        this.db.run(`INSERT INTO documents(${this.attrs.join(',')}) \
-                     VALUES (${attr_placeholders.join(',')})`, 
-                     attr_values)
+    static dbFriendlyDate(date) {
+        return date.replace(/(\d{2})\.(\d{2})\.(\d{4})/, '$3-$2-$1')
     }
 
-    all() {
-        let result
-        this.db.all('SELECT * FROM documents', (err, rows) => { result = rows } )
-        return result
+    static filterAttr(val) {
+        return (/(\d{2})\.(\d{2})\.(\d{4})/.test(val)) ? this.dbFriendlyDate(val) : val
+    }
+
+    static async db() {
+        const db = await open({filename: './documents.sqlite3', driver: sqlite3.Database})
+        await db.run(`CREATE TABLE IF NOT EXISTS documents(
+                          id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                          ${Document.attrs.map(attr => `${attr} TEXT`).join(',')}
+                      )`)
+        return db
+    }
+
+    async insert() {
+        let values = []
+        let placeholders = []
+        Document.attrs.forEach((attr) => {
+            values.push(Document.filterAttr(this[attr]))
+            placeholders.push('?')
+        })
+        const sql = `INSERT INTO documents (${Document.attrs.join(',')}) VALUES (${placeholders.join(',')})`
+        const db = await Document.db()
+        await db.run(sql, values)
+    }
+
+    static async all() {
+        const db = await Document.db()
+        return await db.all('SELECT * FROM documents')
     }
 }
 
