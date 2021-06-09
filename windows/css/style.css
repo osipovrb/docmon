@@ -21,3 +21,19 @@ td {
 .padding-bottom-0 {
     padding-bottom: 0px;
 }
+
+dialog::backdrop {
+    pointer-events: none;
+}
+
+dialog::footer {
+    justify-content: flex-start;
+}
+
+dialog > footer > .save {
+    margin-left: 0px;
+}
+
+dialog > footer > .cancel {
+    margin-left: auto;
+}

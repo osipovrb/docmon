@@ -20,7 +20,7 @@ function createWindow (file, width, height) {
 }
 
 app.whenReady().then(() => {
-    let mainWindow = createWindow('windows/main.html', 800, 600)
+    let mainWindow = createWindow('windows/main.html', 1200, 1000)
     mainWindow.once('ready-to-show', () => { mainWindow.show() })
 
     // --- open form ---
@@ -42,7 +42,7 @@ app.whenReady().then(() => {
             try {
                 const doc = new Document().fill(docData)
                 await doc.insert()
-                mainWindow.webContents.send('notification', 'Документ успешно добавлен в базу данных')
+                mainWindow.webContents.send('notification', 'Документ успешно добавлен')
             } catch(err) {
                 mainWindow.webContents.send('alert', err)
             }
