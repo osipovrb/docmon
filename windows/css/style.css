@@ -2,7 +2,7 @@ x-input {
     max-width: 9000px;
 }
 
-td {
+tr.borderless > td {
     border: none !important;
 }
 
@@ -36,4 +36,12 @@ dialog > footer > .save {
 
 dialog > footer > .cancel {
     margin-left: auto;
+}
+
+.sidebar {
+    width: 100px;
+}
+
+#documents {
+    font-size: 12px;
 }

@@ -20,20 +20,16 @@ function createWindow (file, width, height) {
 }
 
 app.whenReady().then(() => {
-    let mainWindow = createWindow('windows/main.html', 1200, 1000)
-    mainWindow.once('ready-to-show', () => { mainWindow.show() })
 
-    // --- open form ---
-    ipcMain.on('open-form', (_event, _args) => {
-        let formWindow = createWindow('windows/form.html', 900, 900)
-        formWindow.once('ready-to-show', () => { formWindow.show() })
-        formWindow.on('close', (_event) => { 
-            mainWindow.webContents.send('main', 'form-closed')
-            formWindow = null 
-        })
-        mainWindow.on('close', (_event) => { 
-            if (formWindow) formWindow.close() 
-        })
+
+
+})
+
+app.on('ready', () => {
+    let mainWindow = createWindow('windows/main.html', 1800, 1000)
+
+    mainWindow.once('ready-to-show', () => { 
+        mainWindow.show() 
     })
 
     // --- create document
@@ -47,6 +43,13 @@ app.whenReady().then(() => {
                 mainWindow.webContents.send('alert', err)
             }
 
+        })()
+    })
+
+    ipcMain.on('get-documents', (_event, _msg) => {
+        (async () => {
+            const documents = await Document.all()
+            mainWindow.webContents.send('documents', documents)
         })()
     })
 })

@@ -23,6 +23,8 @@
     "sqlite3": "^5.0.2"
   },
   "dependencies": {
+    "nl2br": "0.0.3",
+    "simple-datatables": "^3.0.2",
     "sqlite": "^4.0.23",
     "xel": "^0.9.7",
     "xel-fonts": "^0.9.1"
