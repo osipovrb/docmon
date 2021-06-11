@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { Document } = require('./document')
+const { DocumentTableRow } = require('./documentTableRow')
 
 const path = require('path')
 
@@ -26,6 +27,15 @@ app.whenReady().then(() => {
 })
 
 app.on('ready', () => {
+    function refreshDocuments() {
+        let documents = Document.all()
+        let rows = []
+        let states = []
+        documents.forEach((doc) => { rows.unshift((new DocumentTableRow(doc)).row()) })
+        documents.forEach((doc) => { states.push([doc.id, Document.state(doc)]) })
+        mainWindow.webContents.send('documents', rows, states)
+    }
+
     let mainWindow = createWindow('windows/main.html', 1800, 1000)
 
     mainWindow.once('ready-to-show', () => { 
@@ -34,23 +44,17 @@ app.on('ready', () => {
 
     // --- create document
     ipcMain.on('create-document', (_event, docData) => {
-        (async () => {
-            try {
-                const doc = new Document().fill(docData)
-                await doc.insert()
-                mainWindow.webContents.send('notification', 'Документ успешно добавлен')
-            } catch(err) {
-                mainWindow.webContents.send('alert', err)
-            }
-
-        })()
+        (new Document()).fill(docData).insert()
+        mainWindow.webContents.send('notification', 'Документ успешно добавлен')
+        refreshDocuments()
     })
 
-    ipcMain.on('get-documents', (_event, _msg) => {
-        (async () => {
-            const documents = await Document.all()
-            mainWindow.webContents.send('documents', documents)
-        })()
+    ipcMain.on('get-documents', (_event, ids) => {
+        refreshDocuments()
+    })
+
+    ipcMain.on('get-states', (_event, ids) => {
+        mainWindow.webContents.send('states', Document.getByIds(ids).map(doc => [doc.id.toString(), Document.state(doc)]))
     })
 })
 

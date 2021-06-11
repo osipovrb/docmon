@@ -45,3 +45,16 @@ dialog > footer > .cancel {
 #documents {
     font-size: 12px;
 }
+
+.doc-executed {
+    background-color: #008000;
+}
+
+.doc-executing {
+    background-color: #0c76da;
+}
+
+.doc-expired {
+    background-color: #e71123;
+}
+

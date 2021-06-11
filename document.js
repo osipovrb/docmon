@@ -1,7 +1,5 @@
-const sqlite3 = require('sqlite3')
-const { open } = require('sqlite')
-
 class Document {
+
     static attrs = ['delivered_at', 'delivered_number', 'secret_label',
     'reg_number', 'reg_date', 'origin', 'doc_type', 'doc_content',
     'sheets_count', 'instance_number', 'executant', 'execute_till',
@@ -39,30 +37,50 @@ class Document {
         return (/(\d{2})\.(\d{2})\.(\d{4})/.test(val)) ? this.dbFriendlyDate(val) : val
     }
 
-    static async db() {
-        const db = await open({filename: './documents.sqlite3', driver: sqlite3.Database})
-        await db.run(`CREATE TABLE IF NOT EXISTS documents(
-                          id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                          ${Document.attrs.map(attr => `${attr} TEXT`).join(',')}
-                      )`)
+    static db() {
+        const db = require('better-sqlite3')('documents.sqlite3');
+        db.prepare(`CREATE TABLE IF NOT EXISTS documents(
+                        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                        ${Document.attrs.map(attr => `${attr} TEXT`).join(',')}
+                    )`).run()
         return db
     }
 
-    async insert() {
+    insert() {
         let values = []
         let placeholders = []
         Document.attrs.forEach((attr) => {
             values.push(Document.filterAttr(this[attr]))
             placeholders.push('?')
         })
-        const sql = `INSERT INTO documents (${Document.attrs.join(',')}) VALUES (${placeholders.join(',')})`
-        const db = await Document.db()
-        await db.run(sql, values)
+        Document.db().prepare(`INSERT INTO documents (${Document.attrs.join(',')}) 
+                                VALUES (${placeholders.join(',')})`).run(values)
     }
 
-    static async all() {
-        const db = await Document.db()
-        return await db.all('SELECT * FROM documents')
+    static all() {
+        return Document.db().prepare('SELECT * FROM documents ORDER BY id').all()
+    }
+
+    static getByIds(ids) {
+        return Document.db()
+            .prepare(`SELECT * FROM documents WHERE id IN ( ${ids.map(id => '?')} )`)
+            .all(ids)
+    }
+
+    static state(document) {
+        const execute_till = +new Date(document.execute_till)
+        const executed_at = +new Date(document.executed_at)
+        const today = Date.now()
+        let state = 'default'
+        // check for expire
+        if ((execute_till && execute_till < today) && !executed_at) {
+            state = 'expired'
+        } else if ((execute_till && execute_till >= today) && !executed_at) {
+            state = 'executing'
+        } else if (executed_at && executed_at <= today) {
+            state = 'executed'
+        }
+        return state
     }
 }
 

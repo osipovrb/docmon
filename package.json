@@ -19,10 +19,13 @@
   "homepage": "https://github.com/osipovrb/docmon#readme",
   "devDependencies": {
     "electron": "^13.0.1",
+    "electron-builder": "^22.10.5",
     "electron-packager": "^15.2.0",
+    "electron-rebuild": "^2.3.5",
     "sqlite3": "^5.0.2"
   },
   "dependencies": {
+    "better-sqlite3": "^7.4.1",
     "nl2br": "0.0.3",
     "simple-datatables": "^3.0.2",
     "sqlite": "^4.0.23",
