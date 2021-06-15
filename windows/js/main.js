@@ -35,24 +35,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const showDocuments = (rows, states) => {
-        const parent = document.getElementById('#documents-parent')
-        const documents = document.getElementById('#documents')
-        const updateStates = (states) => {
-            const tableRows = Array.from(document.querySelector('#documents > tbody').childNodes)
-            states.forEach(state => {
-                const tr = tableRows.filter(tr => tr.firstChild.innerHTML == state[0])[0]
-                if (tr) {
-                    tr.classList.add(`doc-${state[1]}`)
-                }
-            });
-           
+        let documentsWrapper = document.querySelector('.dataTable-wrapper')
+        let parent = document.getElementById('documents-parent')
+        if (documentsWrapper) {
+            parent.removeChild(documentsWrapper)
         }
-        if (documents) {
-            documents.remove()
-            documents = document.createElement('table')
-            documents.attributes['id'] = 'documents'
-            parent.appendChild(documents)
-        }
+    
+        let newDocuments = document.createElement('table')
+        newDocuments.id = 'documents'
+        parent.appendChild(newDocuments)
+
         let data = {
             'headings': [
                 '&nbsp;',
@@ -85,6 +77,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             'perPage': 10,
             'perPageSelect': false
         })
+
+        const updateStates = (states) => {
+            const tableRows = Array.from(document.querySelector('#documents > tbody').childNodes)
+            states.forEach(state => {
+                const tr = tableRows.filter(tr => tr.firstChild.innerHTML == state[0])[0]
+                if (tr) {
+                    tr.classList.add(`doc-${state[1]}`)
+                }
+            });
+           
+        }
 
         updateStates(states)
 
