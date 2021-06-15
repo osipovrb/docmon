@@ -5,15 +5,26 @@ const { ipcRenderer } = require('electron')
 
 document.body.hidden = true
 
-var datatable
-
 document.addEventListener('DOMContentLoaded', async () => {
     await Xel.whenThemeReady
     document.body.hidden = false
 
+    const getDocuments = () => {
+        ipcRenderer.send('get-documents', '')
+    }
+
     const closeDocumentForm = () => {
-        //Array.from(document.querySelectorAll('#document-form .collect')).forEach(input => input.value = null)
-        document.getElementById('dform').reset()
+        document.querySelectorAll('#document-form .collect:not(.date)').forEach(input => input.value = '')
+        document.querySelectorAll('#document-form .date').forEach(input => {
+            const parent = input.parentNode
+            const newInput = document.createElement('x-input')
+            newInput.type = input.type
+            newInput.id = input.id
+            newInput.classList.add('collect')
+            newInput.classList.add('date')
+            parent.removeChild(input)
+            parent.appendChild(newInput)
+        })
         document.getElementById('secret_label').value = 's'
         document.getElementById('document-form').close()
     }
@@ -23,63 +34,88 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeDocumentForm()
     }
 
-    document.getElementById('document-close-button').addEventListener('click', () => closeDocumentForm())
-    document.getElementById('document-save-button').addEventListener('click', () => saveDocumentForm())
+    const showDocuments = (rows, states) => {
+        const parent = document.getElementById('#documents-parent')
+        const documents = document.getElementById('#documents')
+        const updateStates = (states) => {
+            const tableRows = Array.from(document.querySelector('#documents > tbody').childNodes)
+            states.forEach(state => {
+                const tr = tableRows.filter(tr => tr.firstChild.innerHTML == state[0])[0]
+                if (tr) {
+                    tr.classList.add(`doc-${state[1]}`)
+                }
+            });
+           
+        }
+        if (documents) {
+            documents.remove()
+            documents = document.createElement('table')
+            documents.attributes['id'] = 'documents'
+            parent.appendChild(documents)
+        }
+        let data = {
+            'headings': [
+                '&nbsp;',
+                'Входящий',
+                'Исходящий',
+                'Откуда поступил',
+                'Документ',
+                'Экз.',
+                'Исполнить до',
+                'Исполнители',
+                'Факт. исполнен',
+                'Отметка об исполнении',
+                'Место хранения',
+            ],
+            'data': []
+        }
+        data.data = rows
+        const datatable = new DataTable('#documents', {
+            'data': data,
+            'labels': {
+                placeholder: "Поиск...",
+                perPage: "Показывать {select} строк на странице",
+                noRows: "Документы не найдены",
+                info: "Показаны строки с {start} по {end}. Всего строк: {rows}",
+            },
+            'layout': {
+                'top': '{search}{pager}',
+                'bottom': '{info}',
+            },
+            'perPage': 10,
+            'perPageSelect': false
+        })
 
-    ipcRenderer.send('get-documents', '')
+        updateStates(states)
 
-    ipcRenderer.on('notification', (_event, msg) => {
+        datatable.on('datatable.page', (_page) => {
+            updateStates(states)
+        })
+    }
+
+    const notification = (msg) => {
         const notification = document.getElementById('notification')
         notification.innerHTML = msg
         notification.opened = true
+    }
+
+    document.getElementById('document-close-button').addEventListener('click', () => closeDocumentForm())
+    document.getElementById('document-save-button').addEventListener('click', () => saveDocumentForm())
+
+    ipcRenderer.on('notification', (_event, msg) => {
+        notification(msg)
     })
     
     ipcRenderer.on('alert', (_event, msg) => {
         alert(msg)
     })
-})
 
-ipcRenderer.on('documents', (_event, rows, states) => {
-    let data = {
-        'headings': [
-            '&nbsp;',
-            'Входящий',
-            'Исходящий',
-            'Откуда поступил',
-            'Документ',
-            'Экз.',
-            'Исполнить до',
-            'Исполнители',
-            'Факт. исполнен',
-            'Отметка об исполнении',
-            'Место хранения',
-        ],
-        'data': []
-    }
-    data.data = rows
-    if (datatable) {
-        datatable.destroy()
-    }
-    datatable = new DataTable('#documents', {
-        'data': data,
-        'labels': {
-            placeholder: "Поиск...",
-            perPage: "Показывать {select} строк на странице",
-            noRows: "Документы не найдены",
-            info: "Показаны строки с {start} по {end}. Всего строк: {rows}",
-        },
-        'perPage': 10,
-        'perPageSelect': false
+    ipcRenderer.on('documents', (_event, rows, states) => {
+        showDocuments(rows, states)
     })
 
-    datatable.on('datatable.page', function(page) {
-        const rows = document.querySelectorAll('#document > tbody > tr')
-        ipcRenderer.send('get-states', Array.from(rows).map(row => row.firstChild.innerHTML))
-        ipcRenderer.once('states', (states) => {
-            Array.from(rows).forEach(row => row.classList.add(`doc-${states[row.innerHTML]}`))
-        })
-    });
-
-    states.forEach(state => Array.from(document.querySelector('#documents > tbody').childNodes).filter(tr => tr.firstChild.innerHTML == state[0])[0].classList.add(`doc-${state[1]}`))
+    getDocuments()
 })
+
+
 

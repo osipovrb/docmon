@@ -53,8 +53,10 @@ class Document {
             values.push(Document.filterAttr(this[attr]))
             placeholders.push('?')
         })
-        Document.db().prepare(`INSERT INTO documents (${Document.attrs.join(',')}) 
-                                VALUES (${placeholders.join(',')})`).run(values)
+        Document.db()
+            .prepare(`INSERT INTO documents (${Document.attrs.join(',')}) 
+                                VALUES (${placeholders.join(',')})`)
+            .run(values)
     }
 
     static all() {
@@ -72,7 +74,7 @@ class Document {
         const executed_at = +new Date(document.executed_at)
         const today = Date.now()
         let state = 'default'
-        // check for expire
+
         if ((execute_till && execute_till < today) && !executed_at) {
             state = 'expired'
         } else if ((execute_till && execute_till >= today) && !executed_at) {

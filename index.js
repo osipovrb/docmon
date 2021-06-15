@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron')
 const { Document } = require('./document')
 const { DocumentTableRow } = require('./documentTableRow')
 
@@ -31,12 +31,19 @@ app.on('ready', () => {
         let documents = Document.all()
         let rows = []
         let states = []
-        documents.forEach((doc) => { rows.unshift((new DocumentTableRow(doc)).row()) })
-        documents.forEach((doc) => { states.push([doc.id, Document.state(doc)]) })
+
+        documents.forEach( (doc) => { 
+            rows.unshift((new DocumentTableRow(doc)).row()) 
+        })
+        
+        documents.forEach( (doc) => { 
+            states.push([doc.id, Document.state(doc)]) 
+        })
+
         mainWindow.webContents.send('documents', rows, states)
     }
 
-    let mainWindow = createWindow('windows/main.html', 1800, 1000)
+    const mainWindow = createWindow('windows/main.html', 1800, 1000)
 
     mainWindow.once('ready-to-show', () => { 
         mainWindow.show() 
@@ -51,11 +58,9 @@ app.on('ready', () => {
 
     ipcMain.on('get-documents', (_event, ids) => {
         refreshDocuments()
+        mainWindow.webContents.send('notification', 'Таблица документов загружена')
     })
 
-    ipcMain.on('get-states', (_event, ids) => {
-        mainWindow.webContents.send('states', Document.getByIds(ids).map(doc => [doc.id.toString(), Document.state(doc)]))
-    })
 })
 
 app.on('window-all-closed', function () {

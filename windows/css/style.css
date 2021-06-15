@@ -47,14 +47,17 @@ dialog > footer > .cancel {
 }
 
 .doc-executed {
-    background-color: #008000;
+    background-color: #57C057;
 }
 
 .doc-executing {
-    background-color: #0c76da;
+    background-color: #72B0ED;
 }
 
 .doc-expired {
-    background-color: #e71123;
+    background-color: #F37780;
 }
 
+.dataTable-top, .dataTable-bottom {
+    padding: 8px 0px !important;
+}
