@@ -27,14 +27,14 @@ class DocumentTableRow {
     }
 
     delivered() {
-        return `Дата входящего: ${DocumentTableRow.formatDate(this.document.delivered_at) || DocumentTableRow.noData}<br/>
-                Входящий № ${this.document.delivered_number || DocumentTableRow.noData}<br/>
+        return `Дата: ${DocumentTableRow.formatDate(this.document.delivered_at) || DocumentTableRow.noData}<br/>
+                Номер: ${this.document.delivered_number || DocumentTableRow.noData}<br/>
                 Гриф: ${DocumentTableRow.secretLabels[this.document.secret_label]}`
     }
 
     reg() {
-        return `Дата исходящего: ${DocumentTableRow.formatDate(this.document.reg_date) || DocumentTableRow.noData}<br/>
-                Исходящий № ${this.document.reg_date || DocumentTableRow.noData}`
+        return `Дата: ${DocumentTableRow.formatDate(this.document.reg_date) || DocumentTableRow.noData}<br/>
+                Номер: ${this.document.reg_date || DocumentTableRow.noData}`
     }
 
     origin() {
@@ -43,7 +43,7 @@ class DocumentTableRow {
 
     content() {
 
-        return `Вид документа: ${this.document.doc_type || DocumentTableRow.noData}<br/>
+        return `Вид: ${this.document.doc_type || DocumentTableRow.noData}<br/>
                 Краткое содержание: ${nl2br(this.document.doc_content) || DocumentTableRow.noData}`
     }
 
