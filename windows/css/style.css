@@ -43,19 +43,44 @@ dialog > footer > .cancel {
 }
 
 #documents {
-    font-size: 12px;
+    font-size: 13px;
+    border-width: 2px;
+}
+
+#documents > thead > tr {
+    font-size: 11px;
+}
+
+tr.doc-default {
+    background-color: #FFFFFF;
+}
+
+tr.doc-default:hover {
+    background-color: #dadada;
 }
 
 .doc-executed {
     background-color: #57C057;
 }
 
+.doc-executed:hover {
+    background-color: #65aa65;
+}
+
 .doc-executing {
     background-color: #72B0ED;
 }
 
+.doc-executing:hover {
+    background-color: #799fc5;
+}
+
 .doc-expired {
     background-color: #F37780;
+}
+
+.doc-expired:hover {
+    background-color: #c5797f;	
 }
 
 .dataTable-top, .dataTable-bottom {

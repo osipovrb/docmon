@@ -72,28 +72,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             },
             'layout': {
                 'top': '{search}{pager}',
-                'bottom': '{info}',
+                'bottom': '{select}{info}',
             },
             'perPage': 10,
-            'perPageSelect': false
+            'perPageSelect': [10, 25, 100, 500]
         })
 
-        const updateStates = (states) => {
+        const alterRows = (states) => {
             const tableRows = Array.from(document.querySelector('#documents > tbody').childNodes)
             states.forEach(state => {
+                // разукрашиваю
                 const tr = tableRows.filter(tr => tr.firstChild.innerHTML == state[0])[0]
                 if (tr) {
+                    tr.className = ''
                     tr.classList.add(`doc-${state[1]}`)
                 }
             });
-           
+           tableRows.forEach(tr => {
+               const id = parseInt(tr.firstChild.innerHTML, 10)
+
+           })
         }
 
-        updateStates(states)
+        alterRows(states)
 
         datatable.on('datatable.page', (_page) => {
-            updateStates(states)
+            alterRows(states)
         })
+
+        datatable.on('datatable.sort', (_column, _direction) => {
+            alterRows(states)
+        });
+
+        datatable.on('datatable.perpage', (_perpage) => {
+            alterRows(states)
+        });
     }
 
     const notification = (msg) => {

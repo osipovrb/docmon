@@ -16,7 +16,7 @@ function createWindow (file, width, height) {
         },
     })
     window.loadFile(file)
-    //win.removeMenu()
+    //window.removeMenu()
     return window
 }
 
@@ -43,7 +43,7 @@ app.on('ready', () => {
         mainWindow.webContents.send('documents', rows, states)
     }
 
-    const mainWindow = createWindow('windows/main.html', 1800, 1000)
+    const mainWindow = createWindow('windows/main.html', 1800, 970)
 
     mainWindow.once('ready-to-show', () => { 
         mainWindow.show() 
