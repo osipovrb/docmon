@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         let data = {
             'headings': [
-                '&nbsp;',
+                'ID',
                 'Входящий',
                 'Исходящий',
                 'Откуда',
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             'data': data,
             'labels': {
                 placeholder: "Поиск...",
-                perPage: "Показывать {select} строк на странице",
+                perPage: "Показывать по {select} строк",
                 noRows: "Документы не найдены",
                 info: "Показаны строки с {start} по {end}. Всего строк: {rows}",
             },
@@ -75,7 +75,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'bottom': '{select}{info}',
             },
             'perPage': 10,
-            'perPageSelect': [10, 25, 100, 500]
+            'perPageSelect': [10, 25, 100, 500],
+            'sortable': false
         })
 
         const alterRows = (states) => {

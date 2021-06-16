@@ -21,7 +21,7 @@
     <tr class="borderless">
       <td class="sidebar pull-top">
         <!-- DocumentForm -->
-        <x-button id="create-document-button">
+        <x-button id="create-document-button" class="width-100">
 
           <x-icon name="add"></x-icon>
           <x-label>Добавить документ</x-label>
@@ -164,6 +164,29 @@
   
         </x-button>
         <!-- /DocumentForm -->
+        <hr id="sidebar-separator">
+        <x-buttons tracking="1" vertical class="width-100">
+          <x-button toggled class="filter-default">
+            <x-icon name="home"></x-icon>
+            <x-label>Все документы (4)</x-label>
+          </x-button>
+        
+          <x-button class="filter-executing">
+            <x-icon name="clock"></x-icon>
+            <x-label>На исполнении (1)</x-label>
+          </x-button>
+        
+          <x-button class="filter-expired">
+            <x-icon name="alert"></x-icon>
+            <x-label>Просроченные</x-label>
+          </x-button>
+
+          <x-button class="filter-executed">
+            <x-icon name="flag"></x-icon>
+            <x-label>Исполненные</x-label>
+          </x-button>
+        </x-buttons>
+        
       </td>
       <td id="documents-parent">
         <!-- Documents -->

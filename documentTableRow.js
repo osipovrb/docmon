@@ -34,7 +34,7 @@ class DocumentTableRow {
 
     reg() {
         return `Дата: ${DocumentTableRow.formatDate(this.document.reg_date) || DocumentTableRow.noData}<br/>
-                Номер: ${this.document.reg_date || DocumentTableRow.noData}`
+                Номер: ${this.document.reg_number || DocumentTableRow.noData}`
     }
 
     origin() {
@@ -48,8 +48,8 @@ class DocumentTableRow {
     }
 
     sheets() {
-        return `Листов: ${this.document.sheets_count || DocumentTableRow.noData}<br/>
-                № экз.: ${this.document.instance_number || DocumentTableRow.noData}`
+        return `Листов:&nbsp;${this.document.sheets_count || DocumentTableRow.noData}<br/>
+                № экз.:&nbsp;${this.document.instance_number || DocumentTableRow.noData}`
     }
 
     executant() {

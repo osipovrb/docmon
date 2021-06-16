@@ -43,7 +43,7 @@ app.on('ready', () => {
         mainWindow.webContents.send('documents', rows, states)
     }
 
-    const mainWindow = createWindow('windows/main.html', 1800, 970)
+    const mainWindow = createWindow('windows/main.html', 1800, 920)
 
     mainWindow.once('ready-to-show', () => { 
         mainWindow.show() 
