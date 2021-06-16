@@ -166,22 +166,22 @@
         <!-- /DocumentForm -->
         <hr id="sidebar-separator">
         <x-buttons tracking="1" vertical class="width-100">
-          <x-button toggled class="filter-default">
+          <x-button toggled class="filter filter-default" data-filter="">
             <x-icon name="home"></x-icon>
             <x-label data-label="Все документы"></x-label>
           </x-button>
         
-          <x-button class="filter-executing">
+          <x-button class="filter filter-executing" data-filter="executing">
             <x-icon name="clock"></x-icon>
             <x-label data-label="На исполнении"></x-label>
           </x-button>
         
-          <x-button class="filter-expired">
+          <x-button class="filter filter-expired" data-filter="expired">
             <x-icon name="alert"></x-icon>
             <x-label data-label="Просроченные"></x-label>
           </x-button>
 
-          <x-button class="filter-executed">
+          <x-button class="filter filter-executed" data-filter="executed">
             <x-icon name="flag"></x-icon>
             <x-label data-label="Исполненные"></x-label>
           </x-button>

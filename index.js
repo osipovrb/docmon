@@ -21,7 +21,7 @@ function createWindow (file, width, height) {
 }
 
 app.on('ready', () => {
-    function refreshDocuments() {
+    function refreshDocuments(filter = '') {
         let documents = Document.all()
         let rows = []
         let states = []
@@ -31,11 +31,12 @@ app.on('ready', () => {
             ['executing', 0],
             ['executed', 0],
         ]
-
-        documents.forEach( (doc) => { 
-            rows.unshift((new DocumentTableRow(doc)).row()) 
-            let state = Document.state(doc)
-            states.push([doc.id, state])
+        documents.forEach( (doc) => {
+            let state = Document.state(doc) 
+            if (!filter || (filter && state == filter)) {
+                rows.unshift((new DocumentTableRow(doc)).row()) 
+                states.push([doc.id, state])
+            }            
             let stateIndex = stateCounts.map((item) => item[0]).indexOf(state)
             if (stateIndex > -1) {
                 stateCounts[stateIndex][1] += 1
@@ -58,8 +59,8 @@ app.on('ready', () => {
         refreshDocuments()
     })
 
-    ipcMain.on('get-documents', (_event, ids) => {
-        refreshDocuments()
+    ipcMain.on('get-documents', (_event, filter) => {
+        refreshDocuments(filter)
         mainWindow.webContents.send('notification', 'Таблица документов загружена')
     })
 

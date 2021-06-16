@@ -9,8 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Xel.whenThemeReady
     document.body.hidden = false
 
-    const getDocuments = () => {
-        ipcRenderer.send('get-documents', '')
+    function getDocuments(event) {
+        const filter = (event) ? event.currentTarget.dataset.filter : ''
+        ipcRenderer.send('get-documents', filter)
     }
 
     const closeDocumentForm = () => {
@@ -115,7 +116,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const count = item[1]
             const label = document.querySelector(`.filter-${state} > x-label`)
             if (label) {
-                console.log(label.dataset.label)
                 label.innerHTML = `${label.dataset.label} <strong>${count}</strong>`
             }
         })
@@ -129,6 +129,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('document-close-button').addEventListener('click', () => closeDocumentForm())
     document.getElementById('document-save-button').addEventListener('click', () => saveDocumentForm())
+    document.querySelectorAll('.filter').forEach((btn) => {
+        btn.addEventListener('click', getDocuments)
+    })
 
     ipcRenderer.on('notification', (_event, msg) => {
         notification(msg)
