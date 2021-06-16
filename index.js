@@ -20,27 +20,29 @@ function createWindow (file, width, height) {
     return window
 }
 
-app.whenReady().then(() => {
-
-
-
-})
-
 app.on('ready', () => {
     function refreshDocuments() {
         let documents = Document.all()
         let rows = []
         let states = []
+        let stateCounts = [
+            ['default', 0],
+            ['expired', 0],
+            ['executing', 0],
+            ['executed', 0],
+        ]
 
         documents.forEach( (doc) => { 
             rows.unshift((new DocumentTableRow(doc)).row()) 
-        })
-        
-        documents.forEach( (doc) => { 
-            states.push([doc.id, Document.state(doc)]) 
+            let state = Document.state(doc)
+            states.push([doc.id, state])
+            let stateIndex = stateCounts.map((item) => item[0]).indexOf(state)
+            if (stateIndex > -1) {
+                stateCounts[stateIndex][1] += 1
+            }
         })
 
-        mainWindow.webContents.send('documents', rows, states)
+        mainWindow.webContents.send('documents', rows, states, stateCounts)
     }
 
     const mainWindow = createWindow('windows/main.html', 1800, 920)

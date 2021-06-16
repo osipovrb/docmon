@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
            tableRows.forEach(tr => {
                const id = parseInt(tr.firstChild.innerHTML, 10)
-
            })
         }
 
@@ -108,6 +107,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         datatable.on('datatable.perpage', (_perpage) => {
             alterRows(states)
         });
+    }
+
+    const updateLabels = (stateCounts) => {
+        stateCounts.forEach((item) => {
+            const state = item[0]
+            const count = item[1]
+            const label = document.querySelector(`.filter-${state} > x-label`)
+            if (label) {
+                console.log(label.dataset.label)
+                label.innerHTML = `${label.dataset.label} <strong>${count}</strong>`
+            }
+        })
     }
 
     const notification = (msg) => {
@@ -127,12 +138,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         alert(msg)
     })
 
-    ipcRenderer.on('documents', (_event, rows, states) => {
+    ipcRenderer.on('documents', (_event, rows, states, stateCounts) => {
         showDocuments(rows, states)
+        updateLabels(stateCounts)
     })
 
     getDocuments()
 })
-
-
-
