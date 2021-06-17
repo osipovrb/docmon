@@ -46,27 +46,24 @@ class Document {
         return db
     }
 
-    insert() {
-        let values = []
-        let placeholders = []
-        Document.attrs.forEach((attr) => {
-            values.push(Document.filterAttr(this[attr]))
-            placeholders.push('?')
-        })
-        Document.db()
-            .prepare(`INSERT INTO documents (${Document.attrs.join(',')}) 
-                                VALUES (${placeholders.join(',')})`)
-            .run(values)
+    create() {
+        const attrs = Document.attrs.join(',')
+        const placeholders = Document.attrs.map((_attr) => '?').join(',')
+        const values = Document.attrs.map((attr) => this[attr])
+        const sql = `INSERT INTO documents (${attrs}) VALUES (${placeholders})`
+        Document.db().prepare(sql).run(values)
+    }
+
+    update(id) {
+        const attrs = Document.attrs.map((attr) => `${attr} = ?`)
+        const values = Document.attrs.map((attr) => this[attr])
+        const sql = `UPDATE documents SET ${attrs} WHERE id = ${id}`
+        Document.db().prepare(sql).run(values)
     }
 
     static all() {
-        return Document.db().prepare('SELECT * FROM documents ORDER BY id').all()
-    }
-
-    static getByIds(ids) {
-        return Document.db()
-            .prepare(`SELECT * FROM documents WHERE id IN ( ${ids.map(id => '?')} )`)
-            .all(ids)
+        const sql = 'SELECT * FROM documents ORDER BY id'
+        return Document.db(sql).prepare(sql).all()
     }
 
     static state(document) {
@@ -84,6 +81,17 @@ class Document {
         }
         return state
     }
+
+    static delete(id) {
+        const sql = 'DELETE FROM documents WHERE id = ?'
+        Document.db().prepare(sql).run(id)
+    }
+
+    static find(id) {
+        const sql = 'SELECT * FROM documents WHERE id = ?'
+        return Document.db().prepare(sql).all(id)[0]
+    }
+
 }
 
 module.exports = { Document }

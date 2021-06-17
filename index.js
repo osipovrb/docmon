@@ -1,6 +1,7 @@
-const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const { Document } = require('./document')
 const { DocumentTableRow } = require('./documentTableRow')
+
 
 const path = require('path')
 
@@ -53,15 +54,44 @@ app.on('ready', () => {
     })
 
     // --- create document
-    ipcMain.on('create-document', (_event, docData) => {
-        (new Document()).fill(docData).insert()
-        mainWindow.webContents.send('notification', 'Документ успешно добавлен')
+    ipcMain.on('create-document', (_event, doc) => {
+        (new Document()).fill(doc).create()
+        mainWindow.webContents.send('notification', 'Документ добавлен')
         refreshDocuments()
     })
 
     ipcMain.on('get-documents', (_event, filter) => {
         refreshDocuments(filter)
-        mainWindow.webContents.send('notification', 'Таблица документов загружена')
+    })
+
+    ipcMain.on('get-document', (_event, docid) => {
+        mainWindow.webContents.send('document', Document.find(docid))
+    })
+
+    ipcMain.on('delete-document', (_event, docid, filter) => {
+        const doc = Document.find(docid)
+        let message = ['Вы уверены, что хотите удалить документ?', '', `ID: ${doc.id}`]
+        if (doc.origin) message.push(`Откуда: ${doc.origin}`)
+        if (doc.doc_type) message.push(`Вид: ${doc.doc_type}`)
+        if (doc.doc_content) message.push(`Краткое содержание: ${doc.doc_content}`)
+        if (confirm = dialog.showMessageBoxSync(mainWindow, {
+            message: message.join('\n'),
+            title: 'Подтверждение',
+            type: 'question',
+            buttons: ['Удалить', 'Отмена'],
+            defaultId: 1,
+            cancelId: 1,
+        }) === 0) {
+            Document.delete(docid)
+            mainWindow.webContents.send('notification', 'Документ удален')
+            refreshDocuments(filter)
+        }
+    })
+
+    ipcMain.on('update-document', (_event, id, doc, filter) => {
+        (new Document()).fill(doc).update(id)
+        mainWindow.webContents.send('notification', 'Документ отредактирован')
+        refreshDocuments(filter)
     })
 
 })

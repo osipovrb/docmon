@@ -182,3 +182,7 @@ table  { border-collapse: collapse; width: 100%; }
     background-image: none;
     border-color: #095109;
 }
+
+.invisible {
+    display: none;
+}

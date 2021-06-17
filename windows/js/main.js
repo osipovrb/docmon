@@ -10,8 +10,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.hidden = false
 
     function getDocuments(event) {
-        const filter = (event) ? event.currentTarget.dataset.filter : ''
-        ipcRenderer.send('get-documents', filter)
+        ipcRenderer.send('get-documents', getFilter())
+    }
+
+    function getFilter() {
+        return document.querySelector('.filter[toggled]').dataset.filter
+    }
+
+    function deleteDocument(event) {
+        const docid = event.currentTarget.dataset.docid
+        const filter = getFilter()
+        ipcRenderer.send('delete-document', docid, filter)
+    }
+
+    function editDocument(event) {
+        const docid = event.currentTarget.dataset.docid
+        ipcRenderer.send('get-document', docid)
     }
 
     const closeDocumentForm = () => {
@@ -26,12 +40,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             parent.removeChild(input)
             parent.appendChild(newInput)
         })
+        const hiddenId = document.querySelector('#document-form #hidden-id')
+        if (hiddenId) {
+            hiddenId.parentNode.removeChild(hiddenId)
+        }
         document.getElementById('secret_label').value = 's'
         document.getElementById('document-form').close()
     }
 
     const saveDocumentForm = () => {
-        ipcRenderer.send('create-document', [...document.getElementsByClassName('collect')].map(input => [input.id, input.value]))
+        const hiddenId = document.querySelector('#document-form #hidden-id')
+        let doc = [...document.getElementsByClassName('collect')].map(input => [input.id, input.value])
+        if (hiddenId) {
+            ipcRenderer.send('update-document', hiddenId.value, doc, getFilter())
+        } else {
+            ipcRenderer.send('create-document', doc)
+        }
         closeDocumentForm()
     }
 
@@ -91,7 +115,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
            tableRows.forEach(tr => {
-               const id = parseInt(tr.firstChild.innerHTML, 10)
+               tr.addEventListener('contextmenu', function(event) {
+                    event.preventDefault()
+
+                    const menu = document.getElementById('context-menu')
+                    const edit = document.getElementById('context-edit')
+                    const del = document.getElementById('context-delete')
+        
+                    const id = tr.firstChild.innerHTML
+                    edit.dataset.docid = id
+                    del.dataset.docid = id
+                    
+                    edit.addEventListener('click', editDocument, {once: true})
+                    del.addEventListener('click', deleteDocument, {once: true})
+
+                    menu.open(event.clientX, event.clientY)
+                    return false
+               })
            })
         }
 
@@ -144,6 +184,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     ipcRenderer.on('documents', (_event, rows, states, stateCounts) => {
         showDocuments(rows, states)
         updateLabels(stateCounts)
+    })
+
+    ipcRenderer.on('document', (_event, doc) => {
+        document.querySelectorAll('#document-form .collect').forEach(input => {
+            input.value = doc[input.id] 
+        })
+        const hiddenId = document.createElement('input')
+        hiddenId.type = 'hidden'
+        hiddenId.id = 'hidden-id'
+        hiddenId.value = doc.id
+        document.getElementById('document-form').appendChild(hiddenId)
+        document.getElementById('document-form').showModal()
     })
 
     getDocuments()

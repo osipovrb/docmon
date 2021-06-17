@@ -197,9 +197,28 @@
     </tr>
   </table>
 
+  <x-notification timeout="2000" id="notification"></x-notification>
 
+  <div class="">
 
+    <x-contextmenu id="context-menu">
 
-    <x-notification timeout="2000" id="notification"></x-notification>
+      <x-menu>
+        <x-menuitem id="context-edit">
+          <x-icon name="edit"></x-icon>
+          <x-label>Редактировать</x-label>
+        </x-menuitem>
+   
+        <hr>
+  
+        <x-menuitem id="context-delete">
+          <x-icon name="delete"></x-icon>
+          <x-label>Удалить</x-label>
+        </x-menuitem>
+      </x-menu>
+  
+    </x-contextmenu>
+
+  </div>
   </body>
 </html>
