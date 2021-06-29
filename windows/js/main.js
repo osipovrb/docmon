@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         ipcRenderer.send('get-documents', getFilter())
     }
 
+    function getAlert() {
+        ipcRenderer.send('get-alert')
+    }
+
     function getFilter() {
         return document.querySelector('.filter[toggled]').dataset.filter
     }
@@ -99,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'top': '{search}{pager}',
                 'bottom': '{select}{info}',
             },
-            'perPage': 10,
+            'perPage': 500,
             'perPageSelect': [10, 25, 100, 500],
             'sortable': false
         })
@@ -178,7 +182,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
     
     ipcRenderer.on('alert', (_event, msg) => {
-        alert(msg)
+        const alertWindow = document.getElementById('alert')
+        const alertContent = document.getElementById('alert-content')
+        const alertCloseButton = document.getElementById('alert-close-button')
+
+        alertContent.innerHTML = msg
+        alertCloseButton.addEventListener('click', () => document.getElementById('alert').close())
+        alertWindow.showModal()
     })
 
     ipcRenderer.on('documents', (_event, rows, states, stateCounts) => {
@@ -199,4 +209,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     getDocuments()
+    getAlert()
 })

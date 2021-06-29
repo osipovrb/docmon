@@ -219,6 +219,19 @@
   
     </x-contextmenu>
 
-  </div>
+    <dialog id="alert">
+      <x-box>
+        <h1>Внимание</h1>
+      </x-box>
+      <x-box>
+        <h3 id="alert-content"></h3>
+      </x-box>
+
+      <footer>
+        <x-button id="alert-close-button" class="cancel">
+          <x-label>Отмена</x-label>
+        </x-button>
+      </footer>
+    </dialog>
   </body>
 </html>

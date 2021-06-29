@@ -186,3 +186,16 @@ table  { border-collapse: collapse; width: 100%; }
 .invisible {
     display: none;
 }
+
+#alert {
+    color: white;
+    background: #9E272F;
+    opacity: 0.85;
+    border: 1px solid #670D13;
+    padding: 10px 20px;
+}
+
+#alert-content {
+    color: white;
+    margin-bottom: 20px;
+}
