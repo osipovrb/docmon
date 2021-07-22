@@ -10,6 +10,10 @@ tr.borderless > td {
     width: 100%
 }
 
+.min-width-300 {
+    min-width: 300px;
+}
+
 .pull-top {
     vertical-align: top;
 }
@@ -51,6 +55,10 @@ dialog > footer > .cancel {
     width: 100px;
 }
 
+#document-form {
+    width: 1200px;
+}
+
 #documents {
     font-size: 13px;
     border-width: 1px !important;
@@ -90,6 +98,14 @@ tr.doc-default:hover {
 
 .doc-expired:hover {
     background-color: #c5797f;	
+}
+
+.doc-pending {
+    background-color: #fbff00;
+}
+
+.doc-pending:hover {
+    background-color: #BFB030;
 }
 
 .dataTable-top, .dataTable-bottom {
@@ -182,6 +198,22 @@ table  { border-collapse: collapse; width: 100%; }
     background-image: none;
     border-color: #095109;
 }
+
+.filter-pending {
+    color: #A69400;
+}
+
+.filter-pending[toggled] {
+    background-color: #7D721F;
+    border-color: rgb(119, 105, 0);
+}
+
+.filter-pending[toggled][pressed] {
+    background-color: #A69400;
+    background-image: none;
+    border-color: #6e6200;
+}
+
 
 .invisible {
     display: none;

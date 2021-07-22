@@ -32,6 +32,7 @@ app.on('ready', () => {
             ['expired', 0],
             ['executing', 0],
             ['executed', 0],
+            ['pending', 0],
         ]
         let total = 0
         documents.forEach( (doc) => {

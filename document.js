@@ -71,14 +71,17 @@ class Document {
         const executed_at = +new Date(document.executed_at)
         const today = Date.now()
         let state = 'default'
-
+      
         if ((execute_till && execute_till < today) && !executed_at) {
             state = 'expired'
+        } else if ((execute_till  && (execute_till - (60*60*24*7*1000)) < today) && !executed_at) {
+            state = 'pending' 
         } else if ((execute_till && execute_till >= today) && !executed_at) {
             state = 'executing'
         } else if (executed_at && executed_at <= today) {
             state = 'executed'
         }
+        
         return state
     }
 
